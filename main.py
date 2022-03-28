@@ -6,6 +6,7 @@ O = "O"
 EMPTY = " "
 TIE = "TIE"
 NUM_SQUARES = 9
+BOARD_WIDTH = 3
 
 def display_instruct():
     """display game instructions"""
@@ -49,8 +50,8 @@ def pieces():
         human = X
         computer = O
     else:
-        # Assign X to the human and O to the computer
-        print("You will regret this, I will go first")
+        # Assign O to the human and X to the computer
+        print("You will regret this: I will go first")
         computer = X
         human = O
     # Returns the symbols for both players
@@ -60,21 +61,27 @@ def new_board():
     """Create a new game board."""
     # Initialises a new array to represent the board
     board = []
-    #For each of the 9 squares append(add) it to the board
+    # For each of the 9 squares append(add) it to the board
     for square in range(NUM_SQUARES):
         board.append(EMPTY)
-    #return an empty board of 9 squares
+    # Return an empty board of 9 squares
     return board
 
 
 def display_board(board):
     """Display game board on screen."""
-    print("\n\t", board[0], "|" , board[1], "|", board[2])
-    print("\t", "------------")
-    print("\n\t", board[3], "|" , board[4], "|", board[5])
-    print("\t", "------------")
-    print("\n\t", board[6], "|" , board[7], "|", board[8])
-    print("\t", "------------")
+    spacing = " " * 4
+    horizontal_rule = "+---" * 3 + "+"
+
+    for i in range(0, NUM_SQUARES, BOARD_WIDTH):
+        print(spacing + horizontal_rule)
+        print(
+              spacing
+              + "| "
+              + " | ".join([board[j] for j in range(i,i+BOARD_WIDTH)])
+              + " |"
+             )
+    print(spacing + horizontal_rule)
 
 def main():
     display_instruct()
@@ -84,3 +91,5 @@ def main():
     display_board(board)
 
 main()
+
+#print("To view your board, please go to https://cdn.shopify.com/s/files/1/2235/4833/files/Noughts_Crosses_Printables_2.png?v=1536848956")
