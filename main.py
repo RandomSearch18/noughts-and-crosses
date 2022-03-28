@@ -41,24 +41,24 @@ def ask_number(question, low, high):
 
 
 def pieces():
-    # Add your comment here
+    # Prompts the player for if they want to go first or not
     go_first = ask_yes_no("Do you want to go first? (y/n): ")
-    # Add your comment here
     if go_first == "y":
+        # Assign X to the human and O to the computer
         print("\n Then take the first move you will need it")
         human = X
-        computer = 0
+        computer = O
     else:
-        # Add your comment here
+        # Assign X to the human and O to the computer
         print("You will regret this, I will go first")
         computer = X
-        human = 0
-    # Add your comment here
+        human = O
+    # Returns the symbols for both players
     return computer, human
 
 def new_board():
     """Create a new game board."""
-    #What data structure is a board?
+    # Initialises a new array to represent the board
     board = []
     #For each of the 9 squares append(add) it to the board
     for square in range(NUM_SQUARES):
@@ -68,7 +68,7 @@ def new_board():
 
 
 def display_board(board):
-    """Display game board on screen. """
+    """Display game board on screen."""
     print("\n\t", board[0], "|" , board[1], "|", board[2])
     print("\t", "------------")
     print("\n\t", board[3], "|" , board[4], "|", board[5])
