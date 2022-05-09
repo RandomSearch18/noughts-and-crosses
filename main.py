@@ -11,17 +11,18 @@ BOARD_WIDTH = 3
 def display_instruct():
     """display game instructions"""
     print(
-    """Welcome to the noughts and crosses game
-    this will be a show down between machine and computer
+    """\
+Welcome to the noughts and crosses game.
+This will be a showdown between human and machine.
 
-    you will make your move by entering a number 0-8. The number
-    will correspond to a board position as illustrated:
+You will make your move by entering a number 0-8. The number
+will correspond to a board position as illustrated:
+    0 | 1 | 2
+    3 | 4 | 5
+    6 | 7 | 8
 
-        0 | 1 | 2
-        3 | 4 | 5
-        6 | 7 | 8
-
-    Prepare yourself. Human. The ultimate battle is about to begin. \n"""
+Prepare yourself, Human. The ultimate battle is about to begin.
+"""
     )
 
 
@@ -41,17 +42,17 @@ def ask_number(question, low, high):
     return response
 
 
-def pieces():
+def get_pieces():
     # Prompts the player for if they want to go first or not
     go_first = ask_yes_no("Do you want to go first? (y/n): ")
     if go_first == "y":
         # Assign X to the human and O to the computer
-        print("\n Then take the first move you will need it")
+        print("\n Then take the first move; you will need it.")
         human = X
         computer = O
     else:
         # Assign O to the human and X to the computer
-        print("You will regret this: I will go first")
+        print("You will regret this: I will go first.")
         computer = X
         human = O
     # Returns the symbols for both players
@@ -85,8 +86,7 @@ def display_board(board):
 
 def main():
     display_instruct()
-    computer, human = pieces()
-    turn = X
+    computer, human = get_pieces()
     board = new_board()
     display_board(board)
 
