@@ -30,15 +30,27 @@ def ask_yes_no(question):
     """asks a yes no question"""
     response = None 
     while response not in ("y", "n"): 
-        response = input(question.lower())
+        response = input(question).lower()
     return response
 
 
-def ask_number(question, low, high):
+def ask_number(question, low, high, exclusive=False):
     """ask for a number within a range"""
+
+    if exclusive:
+        # Make the range 1 smaller on each end if `exclusive` is set
+        low = low + 1
+        high = high - 1
+
+    print(low, high)
+    
     response = None
-    while response not in range(low, high):
-        response = int(input(question))
+    while not response or response < low or response > high:
+        raw_response = input(question)
+        # Removes the negative sign from the number, then checks if it's numeric
+        is_valid_number = raw_response.lstrip('-').isnumeric()
+        # Convert the response to an integer if we can, otherwise use None
+        response = int(raw_response) if is_valid_number else None
     return response
 
 
@@ -47,7 +59,7 @@ def get_pieces():
     go_first = ask_yes_no("Do you want to go first? (y/n): ")
     if go_first == "y":
         # Assign X to the human and O to the computer
-        print("\n Then take the first move; you will need it.")
+        print("\nThen take the first move; you will need it.")
         human = X
         computer = O
     else:
@@ -78,11 +90,12 @@ def display_board(board):
         print(spacing + horizontal_rule)
         print(
               spacing
-              + "| "
+              +  "| "
               + " | ".join([board[j] for j in range(i,i+BOARD_WIDTH)])
               + " |"
              )
     print(spacing + horizontal_rule)
+
 
 def main():
     display_instruct()
@@ -90,6 +103,7 @@ def main():
     board = new_board()
     display_board(board)
 
+ask_number("Number? ", -3, 10)
 main()
 
 #print("To view your board, please go to https://cdn.shopify.com/s/files/1/2235/4833/files/Noughts_Crosses_Printables_2.png?v=1536848956")
