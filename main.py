@@ -1,12 +1,11 @@
-#noughts and crosses
-#demonstartion of functions
-#global constants
 X = "X"
 O = "O"
 EMPTY = " "
 TIE = "TIE"
 NUM_SQUARES = 9
 BOARD_WIDTH = 3
+
+DIRECTIONS = ["left", "right", "up", "down"]
 
 def display_instruct():
     """display game instructions"""
@@ -96,6 +95,70 @@ def display_board(board):
              )
     print(spacing + horizontal_rule)
 
+def legal_moves(board):
+    """Creates a list of legal moves"""
+    # Creates an array to store the legal moves
+    moves = []
+    # For each of the 9 squares
+    for square in range(NUM_SQUARES):
+        # Checks if the square is empty
+        if board[square] == EMPTY:
+            # Adds the square to the list of moves
+            moves.append(square)
+    return moves
+
+def get_neighbour(square, direction, count = 1):
+    if direction not in DIRECTIONS: raise f"{direction} is not a valid direction!"
+    if square < 0: return None
+    
+    if direction == "left":
+        if not (square % BOARD_WIDTH):
+            # The square is on the left edge of the board
+            return None
+        return board[square - 1]
+
+    if direction == "right":
+        if not (square + 1) % BOARD_WIDTH:
+            # The square is on the right edge of the board
+            return None
+        return board[square + 1]
+
+    if direction == "up":
+        if square < BOARD_WIDTH - 1:
+            # The square is on the top row of the board
+            return None
+        return board[square - BOARD_WIDTH]
+
+    if direction == "down":
+        if square >= NUM_SQUARES - BOARD_WIDTH:
+            # The square is on the bottom row of the board
+            return None
+        return board[square + BOARD_WIDTH]
+
+def get_winner(board):
+    for square in board:
+        for dir in DIRECTIONS:
+            
+    
+    #Add a comment
+    WAYS_TO_WIN = ((0,1,2),
+                   (3,4,5),
+                   (6,7,8),
+                   (0,3,6),
+                   (1,4,7),
+                   (2,5,8),
+                   (0,4,8),
+                   (2,4,6))
+    #Add a comment
+    for row in WAYS_TO_WIN:
+        #Add a comment
+        if board[row[0]] == board[row[1]] == board[row[2]] != EMPTY:
+            winner = board[row[0]]
+            return winner
+    #Add a comment
+    if EMPTY not in board:
+        return TIE
+    return None
 
 def main():
     display_instruct()
