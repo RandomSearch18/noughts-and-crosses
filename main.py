@@ -4,8 +4,9 @@ EMPTY = " "
 TIE = "TIE"
 NUM_SQUARES = 9
 BOARD_WIDTH = 3
-
 DIRECTIONS = ["left", "right", "up", "down"]
+
+board = []
 
 def display_instruct():
     """display game instructions"""
@@ -40,8 +41,6 @@ def ask_number(question, low, high, exclusive=False):
         # Make the range 1 smaller on each end if `exclusive` is set
         low = low + 1
         high = high - 1
-
-    print(low, high)
     
     response = None
     while not response or response < low or response > high:
@@ -107,66 +106,80 @@ def legal_moves(board):
             moves.append(square)
     return moves
 
+def has_index(list, index):
+    if index < 0: return False
+    return index < len(list)
+
+def get_row_from_square(square):
+    if square < 0 or square > NUM_SQUARES: return None
+    
+    column = square % BOARD_WIDTH
+    start_index = square - column
+    end_index = start_index + BOARD_WIDTH
+
+    return board[start_index:end_index], column
+
+
 def get_neighbour(square, direction, count = 1):
     if direction not in DIRECTIONS: raise f"{direction} is not a valid direction!"
-    if square < 0: return None
+    if square < 0 or square > NUM_SQUARES: return None
+    if count == 0: return board[square]
+
+    row, index = get_row_from_square(square)
     
     if direction == "left":
-        if not (square % BOARD_WIDTH):
-            # The square is on the left edge of the board
-            return None
-        return board[square - 1]
+        target_index = square - count
+        return row[target_index] if has_index(row, target_index) else None
 
     if direction == "right":
-        if not (square + 1) % BOARD_WIDTH:
-            # The square is on the right edge of the board
-            return None
-        return board[square + 1]
+        target_index = square + count
+        return row[target_index] if has_index(row, target_index) else None
 
     if direction == "up":
-        if square < BOARD_WIDTH - 1:
-            # The square is on the top row of the board
-            return None
-        return board[square - BOARD_WIDTH]
+        offset = BOARD_WIDTH * count
+        if square >= NUM_SQUARES + offset: return None
+        return board[square + offset]
 
     if direction == "down":
-        if square >= NUM_SQUARES - BOARD_WIDTH:
-            # The square is on the bottom row of the board
-            return None
-        return board[square + BOARD_WIDTH]
+        offset = BOARD_WIDTH * count
+        if square >= NUM_SQUARES - offset: return None
+        return board[square - offset]
 
 def get_winner(board):
     for square in board:
         for dir in DIRECTIONS:
-            
-    
-    #Add a comment
-    WAYS_TO_WIN = ((0,1,2),
-                   (3,4,5),
-                   (6,7,8),
-                   (0,3,6),
-                   (1,4,7),
-                   (2,5,8),
-                   (0,4,8),
-                   (2,4,6))
-    #Add a comment
-    for row in WAYS_TO_WIN:
-        #Add a comment
-        if board[row[0]] == board[row[1]] == board[row[2]] != EMPTY:
-            winner = board[row[0]]
-            return winner
-    #Add a comment
+            # Get the squares that are 0, 1, and 2 squares away
+            relevant_squares = []
+            for i in range(3):
+                relevant_squares.append(get_neighbour(square, dir, i))
+                
+            # Ignore this direction if we hit a board edge
+            if None in relevant_squares:
+                continue
+
+            # Work out how many squares each player owns
+            owned_squares = {X: 0, O: 0}
+            for square in relevant_squares:
+                if square == X: owned_squares[X] =+ 1
+                if square == O: owned_squares[O] =+ 1
+
+            # Check if any player owns all three of the squares
+            for [player, count] in enumerate(owned_squares):
+                if count == 3: return player
+
+    # It's a tie if there aren't any empty squares yet
     if EMPTY not in board:
         return TIE
+
     return None
 
 def main():
+    global board
     display_instruct()
     computer, human = get_pieces()
     board = new_board()
     display_board(board)
 
-ask_number("Number? ", -3, 10)
 main()
 
 #print("To view your board, please go to https://cdn.shopify.com/s/files/1/2235/4833/files/Noughts_Crosses_Printables_2.png?v=1536848956")
