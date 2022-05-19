@@ -121,33 +121,49 @@ def get_row_from_square(square):
 
 
 def get_neighbour(square, direction, count = 1):
+    print(f"{square}: {direction} ({count})")
     if direction not in DIRECTIONS: raise f"{direction} is not a valid direction!"
     if square < 0 or square > NUM_SQUARES: return None
-    if count == 0: return board[square]
+    if count == 0: return square
 
     row, index = get_row_from_square(square)
+    col_index = int(square / BOARD_WIDTH)
     
     if direction == "left":
         target_index = square - count
-        return row[target_index] if has_index(row, target_index) else None
+        offset = col_index * BOARD_WIDTH
+        target_exists = has_index(row, target_index - offset)
+        return target_index if target_exists else None
 
     if direction == "right":
         target_index = square + count
-        return row[target_index] if has_index(row, target_index) else None
+        offset = col_index * BOARD_WIDTH
+        target_exists = has_index(row, target_index - offset)
+        return target_index if target_exists else None
 
     if direction == "up":
         offset = BOARD_WIDTH * count
-        if square >= NUM_SQUARES + offset: return None
-        return board[square + offset]
+        target_index = square - offset
+        target_exists = has_index(board, target_index)
+        return target_index if target_exists else None
 
     if direction == "down":
         offset = BOARD_WIDTH * count
-        if square >= NUM_SQUARES - offset: return None
-        return board[square - offset]
+        target_index = square + offset
+        target_exists = has_index(board, target_index)
+        return target_index if target_exists else None
 
 def get_winner(board):
-    for square in board:
+    for square in range(len(board)):
         for dir in DIRECTIONS:
+            # Get the squares that are 0, 1, and 2 squares away
+            relevant_squares = []
+            for i in range(3):
+                print("nb",get_neighbour(square, dir, i))
+    
+    for square in []:
+        for dir in DIRECTIONS:
+            print(f'||{square}||{dir}||')
             # Get the squares that are 0, 1, and 2 squares away
             relevant_squares = []
             for i in range(3):
@@ -173,12 +189,43 @@ def get_winner(board):
 
     return None
 
+def human_move(board, player):
+    # Gets the possible moves
+    legal = legal_moves(board)
+    move = None
+    # Keeps asking the player for a move, until they make a legal one
+    while move not in legal:
+        # Ask the player for the position that they want to play
+        max = NUM_SQUARES - 1
+        message = f"Pick a square to place a \"{player}\" (0–{max}) "
+        move = ask_number(message, 0, max)
+        
+        # Shout at the player if their move isn't legal
+        if move not in legal :
+            print("That square is already occupied, foolish human. Choose another.\n")
+    print("Fine...")
+    # Returns the position that the player moved to
+    return move
+
 def main():
     global board
     display_instruct()
     computer, human = get_pieces()
+    turn = X
     board = new_board()
     display_board(board)
+
+    # print(get_neighbour(1, "up"))
+    # print(get_neighbour(1, "down"))
+    # print(get_neighbour(2, "up"))
+    # print(get_neighbour(2, "down"))
+    # print(get_neighbour(6, "up"))
+    # print(get_neighbour(6, "down"))
+    
+    while not get_winner(board):
+        if turn == human:
+            move = human_move(board, human)
+            board[move] = human
 
 main()
 
