@@ -159,7 +159,7 @@ def get_winner(board):
             # Get the squares that are 0, 1, and 2 squares away
             relevant_squares = []
             for i in range(3):
-                relevant_squares.append("nb",get_neighbour(square, dir, i))
+                relevant_squares.append(get_neighbour(square, dir, i))
 
             print(relevant_squares)
     
